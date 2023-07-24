@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "425240815965",
+    "firebase_url": "https://jago-menabung-e717f-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "jago-menabung-e717f",
+    "storage_bucket": "jago-menabung-e717f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425240815965:android:e427ad83a1e177b324a0b4",
+        "android_client_info": {
+          "package_name": "com.d3if2099.jagomenabung"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425240815965-ptfh61hbf7k6hs30obpcv87uclejpgun.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.d3if2099.jagomenabung",
+            "certificate_hash": "10ec3d1bce443f695a5769444273ca4f022a2611"
+          }
+        },
+        {
+          "client_id": "425240815965-r7o7g25ikdcfpuoiofo0g3rbok3t6gsp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLqOr0faY0DTvykL6gc4YiwXxfAM893Z0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425240815965-r7o7g25ikdcfpuoiofo0g3rbok3t6gsp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
