@@ -1,9 +1,31 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.JagoMenabung" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.JagoMenabung" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/endColor</item>
+        <item name="colorPrimaryVariant">@color/endColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/endColor</item>
+        <item name="colorSecondaryVariant">@color/first</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:fontFamily">@font/gilroysemibold</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
     </style>
-
-    <style name="Theme.JagoMenabung" parent="Base.Theme.JagoMenabung" />
+    <style name="ActionBar" parent="@android:style/Widget.ActionBar">
+        <item name="android:titleTextStyle">@style/ActionBar.Title</item>
+    </style>
+    <style name="ActionBar.Title">
+        <item name="android:fontFamily">@font/gilroysemibold</item>
+    </style>
+    <style name="CustomTablayout" parent="TextAppearance.Design.Tab">
+        <item name="fontFamily">@font/gilroysemibold</item>
+        <item name="android:fontFamily">@font/gilroysemibold</item>
+        <item name="textAllCaps">false</item>
+    </style>
+    <style name="pbTheme" >
+        <item name="colorSecondary">@color/endColor</item>
+    </style>
 </resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/target"
+        android:title="@string/target_menu"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/grafik"
+        android:title="@string/grafik"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/profile"
+        android:title="@string/profil"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout_menu"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/filter_transaksi"
+        android:title="@string/filter"
+        android:icon="@drawable/ic_baseline_filter_alt_24"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction">
+        <menu>
+            <item
+                android:id="@+id/semua"
+                android:title="@string/semua"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/pemasukan"
+                android:title="@string/pemasukan"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/pengeluaran"
+                android:title="@string/pengeluaran"
+                app:showAsAction="never"/>
+        </menu>
+    </item>
+</menu>

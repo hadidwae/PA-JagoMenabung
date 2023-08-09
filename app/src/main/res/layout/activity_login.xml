@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    tools:context=".activity.LoginActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:background="@drawable/gambar1"
+            android:contentDescription="@string/stylebackground1" />
+
+        <TextView
+            android:id="@+id/masukTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="175dp"
+            android:fontFamily="@font/gilroy_bold"
+            android:text="@string/masuk"
+            android:textColor="@color/endColor"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="40dp"
+            android:orientation="vertical"
+            android:layout_below="@id/masukTV">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/tl_email"
+                android:hint="@string/email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:helperTextTextColor="@color/red"
+                app:boxStrokeColor="@color/endColor"
+                app:hintTextColor="@color/endColor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ti_email"
+                    android:fontFamily="@font/gilroymedium"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/endColor"
+                    android:inputType="textEmailAddress"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/tl_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/password"
+                app:hintTextColor="@color/endColor"
+                app:passwordToggleEnabled="true"
+                app:helperTextTextColor="@color/red"
+                android:layout_marginTop="20dp"
+                app:boxStrokeColor="@color/endColor"
+                tools:ignore="HardcodedText">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ti_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/endColor"
+                    android:inputType="textPassword"
+                    android:fontFamily="@font/gilroymedium"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_masuk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/second"
+            android:fontFamily="@font/gilroysemibold"
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp"
+            android:text="@string/masuk" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button_masuk"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroysemibold"
+                android:text="@string/tidak_punya_akun"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textIsSelectable="true"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvbtn_daftar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:enabled="true"
+                android:focusable="true"
+                android:fontFamily="@font/gilroysemibold"
+                android:linksClickable="true"
+                android:padding="5dp"
+                android:text="@string/daftar"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textIsSelectable="true"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvbtn_lupa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:enabled="true"
+            android:focusable="true"
+            android:fontFamily="@font/gilroysemibold"
+            android:linksClickable="true"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/lupa_password"
+            android:textAlignment="center"
+            android:textColor="@color/abumuda4"
+            android:textIsSelectable="true"
+            android:textSize="14sp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/linear_layout2"/>
+
+        <LinearLayout
+            android:id="@+id/linear_layout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear_layout2"
+            android:layout_marginTop="210dp"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="?android:attr/listDivider" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_layout3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textSize="11sp"
+            android:fontFamily="@font/gilroymedium"
+            android:text="@string/kami_tidak_akan_memposting_tanpa_izin_anda"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</ScrollView>

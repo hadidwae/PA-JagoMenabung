@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green">#01AC08</color>
+    <color name="red">#BD0000</color>
+    <color name="pengeluaran">#BD0000</color>
+    <color name="pemasukan">#03A309</color>
+    <color name="abumuda3">#808080</color>
+    <color name="abumuda">#dedede</color>
+    <color name="abumuda2">#F4F4F4</color>
+    <color name="first">#1E6F5C</color>
+    <color name="second">#289672</color>
+    <color name="startColor">#2BE6A6</color>
+    <color name="endColor">#1C6755</color>
+    <color name="abumuda4">#373737</color>
+    <color name="klik">#2C79FF</color>
+    <color name="berhasil">#009833</color>
+    <color name="gagal">#CA0000</color>
 </resources>
