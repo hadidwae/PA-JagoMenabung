@@ -61,6 +61,16 @@ class Profile : Fragment() {
             }
         }
 
+        binding.btnEdit.setOnClickListener {
+            binding.saveCancel.visibility = View.VISIBLE
+            binding.editProfile.visibility = View.VISIBLE
+            binding.tiNama.isFocusable = true
+            binding.tiNama.isFocusableInTouchMode = true
+            binding.tiNama.isClickable = true
+            binding.tiNama.requestFocus()
+            binding.btnEdit.visibility = View.GONE
+        }
+
         binding.cancel.setOnClickListener {
             val id = user!!.uid
             val us = Firebase.auth.currentUser
@@ -77,6 +87,13 @@ class Profile : Fragment() {
                 binding.ivProfile.setImageBitmap(bitmap)
             }.addOnFailureListener {
             }
+            binding.saveCancel.visibility = View.GONE
+            binding.editProfile.visibility = View.GONE
+            binding.tiNama.isFocusable = false
+            binding.tiNama.isFocusableInTouchMode = false
+            binding.tiNama.isClickable = false
+            binding.tiNama.requestFocus()
+            binding.btnEdit.visibility = View.VISIBLE
         }
 
         binding.editProfile.setOnClickListener {
@@ -162,12 +179,19 @@ class Profile : Fragment() {
                     ref = FirebaseDatabase.getInstance().reference.child("Pengguna")
                     ref.child(id).setValue(peng).addOnCompleteListener {
                         Log.i("Update", "Berhasil")
+                        binding.saveCancel.visibility = View.GONE
+                        binding.editProfile.visibility = View.GONE
+                        binding.tiNama.isFocusable = false
+                        binding.tiNama.isFocusableInTouchMode = false
+                        binding.tiNama.isClickable = false
+                        binding.tiNama.requestFocus()
+                        binding.btnEdit.visibility = View.VISIBLE
+                        Toast.makeText(activity, "Profil berhasil diedit.", Toast.LENGTH_SHORT).show()
                         findNavController().popBackStack()
 
                     }.addOnFailureListener {
                         Log.i("Update", "Gagal")
                     }
-                    Toast.makeText(activity, "Profile berhasil diupdate.", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(activity, "Gagal mengupdate profile.", Toast.LENGTH_SHORT).show()
                 }

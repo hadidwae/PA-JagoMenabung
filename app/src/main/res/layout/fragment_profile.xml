@@ -35,6 +35,7 @@
                     android:id="@+id/edit_profile"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:visibility="gone"
                     android:layout_alignBottom="@id/ivProfile"
                     android:layout_toEndOf="@id/ivProfile"
                     android:background="@drawable/ic_add_photo"
@@ -80,6 +81,8 @@
                         android:textColor="@color/black"
                         android:textSize="25sp"
                         android:textStyle="bold"
+                        android:clickable="false"
+                        android:focusable="false"
                         android:background="@color/fui_transparent"
                         android:importantForAutofill="no"
                         tools:ignore="LabelFor" />
@@ -118,6 +121,8 @@
                         android:fontFamily="@font/gilroymedium"
                         android:textSize="25sp"
                         android:textStyle="bold"
+                        android:clickable="false"
+                        android:focusable="false"
                         android:background="@color/fui_transparent"
                         android:importantForAutofill="no"
                         tools:ignore="LabelFor" />
@@ -127,8 +132,24 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/endColor"
+            android:fontFamily="@font/gilroysemibold"
+            android:text="@string/edit_profil"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:visibility="visible"
+            android:layout_below="@id/linearLayout"
+            tools:ignore="ButtonStyle"
+            android:layout_marginTop="45dp"
+            android:layout_centerHorizontal="true"/>
+
         <LinearLayout
             android:id="@+id/save_cancel"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/linearLayout"
@@ -153,7 +174,7 @@
                 android:layout_marginStart="15dp"
                 android:backgroundTint="@color/endColor"
                 android:fontFamily="@font/gilroysemibold"
-                android:text="@string/reset"
+                android:text="@string/batal"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 tools:ignore="ButtonStyle" />
