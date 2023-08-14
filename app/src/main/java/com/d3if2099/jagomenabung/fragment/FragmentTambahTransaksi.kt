@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.d3if2099.jagomenabung.R
 import com.d3if2099.jagomenabung.antarmuka.DateSelected
-import com.d3if2099.jagomenabung.model.TotalSaldo
 import com.d3if2099.jagomenabung.model.Transaksi
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -29,13 +28,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-
 class FragmentTambahTransaksi : Fragment(), DateSelected {
     private lateinit var binding: FragmentTambahTransaksiBinding
     private lateinit var firebaseUser : FirebaseUser
     private lateinit var ref: DatabaseReference
     private lateinit var ref2: DatabaseReference
-    private lateinit var ref3: Query
     private lateinit var ref4: DatabaseReference
     private lateinit var auth: FirebaseAuth
 
@@ -205,12 +202,6 @@ class FragmentTambahTransaksi : Fragment(), DateSelected {
         val viewFormattedDate : String = viewFormatter.format(calendar.time)
 
         binding.tanggalTIL.setText(viewFormattedDate)
-    }
-
-    @SuppressLint("NewApi")
-    fun convertStringToDate(inputDate: String): LocalDate {
-        val formatter = DateTimeFormatter.ofPattern("EEEE, dd MMM yyy")
-        return LocalDate.parse(inputDate, formatter)
     }
 
     private fun convertStringToTimestamp(dateString: String): Long {

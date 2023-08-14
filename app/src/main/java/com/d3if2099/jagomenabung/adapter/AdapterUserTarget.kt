@@ -1,22 +1,17 @@
 package com.d3if2099.jagomenabung.adapter
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.d3if2099.jagomenabung.R
-import com.d3if2099.jagomenabung.model.KunciCapaian
 import com.d3if2099.jagomenabung.model.Target
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -51,7 +46,7 @@ class AdapterUserTarget(private val targetList: ArrayList<Target>,private val li
         val saldo = item.jumlahSaldo
         val formatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
         val saldoformatterTarget = formatter.format(saldo.toString().toDouble()).replace(",00", "")
-        holder.saldoTarget.text = saldoformatterTarget.toString()
+        holder.saldoTarget.text = saldoformatterTarget
 
         val saldoTerkumpul = item.saldoTerkumpul
         val saldoformatterTerkumpul = formatter.format(saldoTerkumpul.toString().toDouble()).replace(",00", "")

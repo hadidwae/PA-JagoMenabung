@@ -193,16 +193,12 @@ class TargetFragment : Fragment() {
             val salwal = saldo.text.toString()
             val jumlahSaldoStr = salwal.replace(".", "")
             val getSaldo = jumlahSaldoStr.toInt()
-
-
-
             simpanTarget(getId, getJudul, getTanggalMulai, getTanggalAkhir, getSaldo)
             dialog.dismiss()
         }
         dialogBuilder.setNegativeButton("Batal") { dialog, _ ->
             dialog.dismiss()
         }
-
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
     }
@@ -224,8 +220,6 @@ class TargetFragment : Fragment() {
 
     private fun showDatePicker(editText: EditText, minDate: Long? = null) {
         val calendar = Calendar.getInstance()
-
-
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             { _, year, monthOfYear, dayOfMonth ->

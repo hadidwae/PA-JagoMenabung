@@ -38,7 +38,6 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class HomeFragment : Fragment(), AdapterUserTransaksi.onItemClicklistener, DateSelectedMonth {
     private lateinit var binding : FragmentHomeBinding
     private lateinit var auth : FirebaseAuth
@@ -116,8 +115,6 @@ class HomeFragment : Fragment(), AdapterUserTransaksi.onItemClicklistener, DateS
             }
         }
     }
-
-
 
     private fun showMonthYearPicker() {
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null)
@@ -224,7 +221,6 @@ class HomeFragment : Fragment(), AdapterUserTransaksi.onItemClicklistener, DateS
                 transaksiList.sortByDescending { it.tanggal }
                 completion(transaksiList)
             }
-
             override fun onCancelled(error: DatabaseError) {
                 completion(emptyList())
             }
@@ -514,7 +510,6 @@ class HomeFragment : Fragment(), AdapterUserTransaksi.onItemClicklistener, DateS
             }
             override fun onCancelled(error: DatabaseError) {}
         })
-
     }
 
     private fun convertStringToTimestamp(dateString: String): Long {

@@ -203,7 +203,6 @@ class GrafikFragment : Fragment(), DateSelectedMonth {
         }
     }
 
-
     @SuppressLint("SimpleDateFormat")
     private fun currentDate(){
         val calendar = Calendar.getInstance()

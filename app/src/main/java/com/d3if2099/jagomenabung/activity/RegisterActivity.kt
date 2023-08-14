@@ -59,7 +59,6 @@ class RegisterActivity : AppCompatActivity() {
                 binding.tiNama.setSelection(capitalizedText.length) // Menempatkan kursor di akhir teks
                 binding.tiNama.addTextChangedListener(this)
             }
-
             override fun afterTextChanged(s: Editable?) {}
         })
 

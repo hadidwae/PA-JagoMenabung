@@ -1,11 +1,8 @@
 package com.d3if2099.jagomenabung.activity
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -18,7 +15,6 @@ import com.google.firebase.auth.FirebaseAuth
 
 class LupaPasswordActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLupaPasswordBinding
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +54,6 @@ class LupaPasswordActivity : AppCompatActivity() {
                     }, 2000)
                 }
             }
-
         }
     }
 
@@ -79,5 +74,4 @@ class LupaPasswordActivity : AppCompatActivity() {
         }
         alertDialog.show()
     }
-
 }

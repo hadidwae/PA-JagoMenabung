@@ -164,7 +164,6 @@ class ShowTransaksiFragment : Fragment(), DateSelected {
 
             return  DatePickerDialog(requireContext(), this, year, month, day )
         }
-
         override fun onDateSet(view: DatePicker?, year: Int, month : Int, day : Int) {
             dateSelected.receiveDate(year, month, day)
         }
@@ -206,7 +205,6 @@ class ShowTransaksiFragment : Fragment(), DateSelected {
             setPositiveButton("HAPUS") { _, _ ->
                 setFragmentResultListener("id") { _, bundle ->
                     val idTransaksi = bundle.getString("id").toString()
-                    val tanggal = binding.tanggalItem.text.toString()
                     val currentUserId = auth.currentUser!!.uid
                     ref = FirebaseDatabase.getInstance().reference.child("Transaksi").child(currentUserId).child(idTransaksi)
                     val task = ref.removeValue()

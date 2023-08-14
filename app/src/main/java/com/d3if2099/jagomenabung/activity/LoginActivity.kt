@@ -14,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
@@ -86,7 +85,6 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
     }
-
 
     override fun onStart() {
         super.onStart()

@@ -1,7 +1,6 @@
 package com.d3if2099.jagomenabung.adapter
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +54,6 @@ class AdapterRiwayatSaldoCapaian(private val riwayatList: ArrayList<RiwayatInput
         holder.btnHapus.setOnClickListener {
             deleteListener(riwayat)
         }
-
     }
 
     override fun getItemCount(): Int {

@@ -11,12 +11,8 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.d3if2099.jagomenabung.R
 import com.d3if2099.jagomenabung.model.Transaksi
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import java.text.NumberFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class AdapterUserTransaksi(private val transaksiList: List<Transaksi>, private val listener: onItemClicklistener): RecyclerView.Adapter<AdapterUserTransaksi.MyViewHolder>() {
 
@@ -55,7 +51,6 @@ class AdapterUserTransaksi(private val transaksiList: List<Transaksi>, private v
         val icBackground: ImageView = itemView.findViewById(R.id.ic_transaksi)
         val show : CardView = itemView.findViewById(R.id.listTransaksi)
     }
-
 
     interface onItemClicklistener{
         fun onItemClick(transaksi : Transaksi, v : View)

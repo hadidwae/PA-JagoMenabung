@@ -138,7 +138,6 @@ class Profile : Fragment() {
     }
 
     private fun edituser(name: String, email: String) {
-
         val contextt: Context
         contextt = requireActivity()
         pref = Preference(contextt)

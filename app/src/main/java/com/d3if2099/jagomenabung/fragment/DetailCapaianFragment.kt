@@ -25,7 +25,6 @@ import com.d3if2099.jagomenabung.databinding.FragmentDetailCapaianBinding
 import com.d3if2099.jagomenabung.model.KunciCapaian
 import com.d3if2099.jagomenabung.model.RiwayatInputSaldo
 import com.d3if2099.jagomenabung.model.Target
-import com.d3if2099.jagomenabung.model.TotalSaldo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -38,7 +37,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-
 
 class DetailCapaianFragment : Fragment() {
     private lateinit var binding: FragmentDetailCapaianBinding
@@ -73,7 +71,6 @@ class DetailCapaianFragment : Fragment() {
             updateTotalSaldo(id)
             binding.idCapaian.text = id
         }
-
 
         binding.btnInput.setOnClickListener {
             val target = binding.targetTIL.text.toString()
@@ -399,7 +396,6 @@ class DetailCapaianFragment : Fragment() {
         )
 
         datePickerDialog.datePicker.minDate = startDate!!.time
-
         datePickerDialog.show()
     }
 
@@ -614,7 +610,6 @@ class DetailCapaianFragment : Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 
     private fun hapusCapaian() {
         AlertDialog.Builder(context).apply {
