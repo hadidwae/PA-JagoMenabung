@@ -1,8 +1,7 @@
 package com.d3if2099.jagomenabung.fragment
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.app.Dialog
+import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -10,8 +9,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
-import androidx.fragment.app.DialogFragment
+import android.widget.Button
+import android.widget.NumberPicker
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -23,14 +22,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.d3if2099.jagomenabung.R
-import com.d3if2099.jagomenabung.antarmuka.DateSelected
+import com.d3if2099.jagomenabung.antarmuka.DateSelectedMonth
 import com.d3if2099.jagomenabung.databinding.FragmentGrafikBinding
+import com.d3if2099.jagomenabung.model.Transaksi
+import java.text.DateFormatSymbols
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
-class GrafikFragment : Fragment(), DateSelected {
+class GrafikFragment : Fragment(), DateSelectedMonth {
     private lateinit var binding: FragmentGrafikBinding
     private lateinit var pieChart: PieChart
     private lateinit var auth : FirebaseAuth
@@ -51,6 +51,16 @@ class GrafikFragment : Fragment(), DateSelected {
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
         ref = FirebaseDatabase.getInstance().reference.child("TotalSaldo")
 
+        binding.tvBulan.setOnClickListener {
+            showMonthYearPicker()
+        }
+
+        currentDate()
+
+        return binding.root
+    }
+
+    private fun loadChart() {
         pieChart = binding.pieChart
 
         pieChart.setUsePercentValues(true)
@@ -88,36 +98,49 @@ class GrafikFragment : Fragment(), DateSelected {
 
         pieChart.invalidate()
 
-        binding.tvTanggal.setOnClickListener {
-            showDatePicker()
-        }
+        val tvBulan = binding.tvBulan.text.toString()
+        val dateFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+        val cal = Calendar.getInstance()
+        cal.time = dateFormat.parse(tvBulan)!!
 
-        currentDate()
+        val bulan = cal.get(Calendar.MONTH)
+        val tahun = cal.get(Calendar.YEAR)
 
-        return binding.root
-    }
+        totalSaldoPemasukan = 0.0f
+        totalSaldoPengeluaran = 0.0f
 
-    private fun loadChart() {
-        val tanggalS = binding.tvTanggal.text.toString()
-        val tanggalA = convertStringToDate(tanggalS).toString()
-        val tanggal = convertStringToTimestamp(tanggalA)
-        ref = FirebaseDatabase.getInstance().reference.child("TotalSaldo").child(firebaseUser.uid).child(tanggal.toString())
+        ref = FirebaseDatabase.getInstance().reference.child("Transaksi").child(firebaseUser.uid)
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 entries.clear()
-                if(snapshot.exists()){
-                    if (snapshot.hasChild("pemasukan")){
-                        val sPem = snapshot.child("pemasukan").value.toString()
-                        totalSaldoPemasukan = sPem.toFloat()
-
-                    }
-                    if (snapshot.hasChild("pengeluaran")){
-                        val sPen = snapshot.child("pengeluaran").value.toString()
-                        totalSaldoPengeluaran = sPen.toFloat()
+                if(snapshot.exists() && snapshot.childrenCount > 0){
+                    for (tranSnap in snapshot.children) {
+                        val tranData = tranSnap.getValue(Transaksi::class.java)
+                        if (tranData != null) {
+                            val transactionCal = Calendar.getInstance()
+                            transactionCal.timeInMillis = tranData.tanggal!!
+                            val transactionMonth = transactionCal.get(Calendar.MONTH)
+                            val transactionYear = transactionCal.get(Calendar.YEAR)
+                            if (transactionMonth == bulan && transactionYear == tahun) {
+                                when (tranData.kategori) {
+                                    "Pemasukan" -> totalSaldoPemasukan += tranData.jumlahSaldo ?: 0
+                                    "Pengeluaran" -> totalSaldoPengeluaran += tranData.jumlahSaldo ?: 0
+                                }
+                            } else {
+                                entries.clear()
+                            }
+                        }
                     }
 
                     entries.add(PieEntry(totalSaldoPemasukan))
                     entries.add(PieEntry(totalSaldoPengeluaran))
+
+                    val formatter = NumberFormat.getCurrencyInstance(Locale("in","ID"))
+                    val saldoPemasukan = formatter.format(totalSaldoPemasukan.toString().toDouble())
+                    val saldoPengeluaran = formatter.format(totalSaldoPengeluaran.toString().toDouble())
+
+                    binding.tvSaldoPemasukan.text = saldoPemasukan.toString()
+                    binding.tvSaldoPengeluaran.text = saldoPengeluaran.toString()
 
                     val dataSet = PieDataSet(entries, "Transaksi")
                     dataSet.setDrawIcons(false)
@@ -133,10 +156,8 @@ class GrafikFragment : Fragment(), DateSelected {
                     data.setValueTextColor(Color.WHITE)
                     pieChart.data = data
 
-                    binding.tvVisible.visibility = View.GONE
                 } else {
                     entries.clear()
-                    binding.tvVisible.visibility = View.VISIBLE
                 }
             }
 
@@ -147,88 +168,90 @@ class GrafikFragment : Fragment(), DateSelected {
 
     }
 
+    private fun showMonthYearPicker() {
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null)
+
+        val monthPicker = view.findViewById<NumberPicker>(R.id.monthPicker)
+        val yearPicker = view.findViewById<NumberPicker>(R.id.yearPicker)
+        val confirmButton = view.findViewById<Button>(R.id.confirmButton)
+
+        val calendar = Calendar.getInstance()
+
+        val month = calendar.get(Calendar.MONTH)
+        val months = DateFormatSymbols().months
+        monthPicker.minValue = 0
+        monthPicker.maxValue = months.size - 1
+        monthPicker.displayedValues = months
+        monthPicker.value = month
+
+        val year = calendar.get(Calendar.YEAR)
+        yearPicker.minValue = year - 10
+        yearPicker.maxValue = year + 10
+        yearPicker.value = year
+
+        val alertDialogBuilder = AlertDialog.Builder(context)
+            .setView(view)
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+
+        confirmButton.setOnClickListener {
+            val selectedMonth = monthPicker.value
+            val selectedYear = yearPicker.value
+            receiveDateMonth(selectedYear, selectedMonth)
+            alertDialog.dismiss()
+        }
+    }
+
+
     @SuppressLint("SimpleDateFormat")
     private fun currentDate(){
         val calendar = Calendar.getInstance()
-        val simpleDateFormat = SimpleDateFormat("EEEE, dd MMM yyy")
+        val simpleDateFormat = SimpleDateFormat("MMMM yyyy")
         var currentDateAndTime: String = simpleDateFormat.format(calendar.time)
 
-        binding.tvTanggal.text = currentDateAndTime
+        binding.tvBulan.text = currentDateAndTime
         loadChart()
 
         binding.previous.setOnClickListener {
-            calendar.add(Calendar.DATE, -1)
+            calendar.add(Calendar.MONTH, -1)
             currentDateAndTime = simpleDateFormat.format(calendar.time)
-            binding.tvTanggal.text = currentDateAndTime
+            binding.tvBulan.text = currentDateAndTime
             loadChart()
         }
 
         binding.next.setOnClickListener {
-            calendar.add(Calendar.DATE, 1)
+            calendar.add(Calendar.MONTH, 1)
             currentDateAndTime = simpleDateFormat.format(calendar.time)
-            binding.tvTanggal.text = currentDateAndTime
+            binding.tvBulan.text = currentDateAndTime
             loadChart()
-        }
-    }
-
-    private fun showDatePicker() {
-        val datePickerFragment = DatePickerFragment(this)
-        datePickerFragment.show(requireFragmentManager(), "datePicker")
-    }
-
-    class DatePickerFragment(private val dateSelected: DateSelected) : DialogFragment(), DatePickerDialog.OnDateSetListener {
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            return  DatePickerDialog(requireContext(), this, year, month, day )
-        }
-
-        override fun onDateSet(view: DatePicker?, year: Int, month : Int, day : Int) {
-            dateSelected.receiveDate(year, month, day)
         }
     }
 
     @SuppressLint("SimpleDateFormat")
-    override fun receiveDate(year: Int, month: Int, day: Int) {
+    override fun receiveDateMonth(year: Int, month: Int) {
         val calendar = GregorianCalendar()
-        calendar.set(Calendar.DAY_OF_MONTH,day)
         calendar.set(Calendar.MONTH,month)
         calendar.set(Calendar.YEAR,year)
 
-        val viewFormatter = SimpleDateFormat("EEEE, dd MMM yyy")
+        val viewFormatter = SimpleDateFormat("MMMM yyyy")
         var viewFormattedDate : String = viewFormatter.format(calendar.time)
 
-        binding.tvTanggal.text = viewFormattedDate
+        binding.tvBulan.text = viewFormattedDate
+        loadChart()
 
         binding.previous.setOnClickListener {
-            calendar.add(Calendar.DATE, -1)
+            calendar.add(Calendar.MONTH, -1)
             viewFormattedDate = viewFormatter.format(calendar.time)
-            binding.tvTanggal.text = viewFormattedDate
+            binding.tvBulan.text = viewFormattedDate
             loadChart()
         }
 
         binding.next.setOnClickListener {
-            calendar.add(Calendar.DATE, 1)
+            calendar.add(Calendar.MONTH, 1)
             viewFormattedDate = viewFormatter.format(calendar.time)
-            binding.tvTanggal.text = viewFormattedDate
+            binding.tvBulan.text = viewFormattedDate
             loadChart()
         }
-
-        loadChart()
-    }
-
-    @SuppressLint("NewApi")
-    fun convertStringToDate(inputDate: String): LocalDate {
-        val formatter = DateTimeFormatter.ofPattern("EEEE, dd MMM yyy")
-        return LocalDate.parse(inputDate, formatter)
-    }
-
-    private fun convertStringToTimestamp(dateString: String): Long {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val date = dateFormat.parse(dateString)
-        return date?.time ?: 0
     }
 }

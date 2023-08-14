@@ -68,11 +68,18 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, R.string.login_berhasil, Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
-                    progressDialog.dismiss()
-                    startActivity(intent)
-                    finish()
+                    val verifikasi = auth.currentUser?.isEmailVerified
+                    if (verifikasi == true){
+                        Toast.makeText(this, R.string.login_berhasil, Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, MainActivity::class.java)
+                        progressDialog.dismiss()
+                        startActivity(intent)
+                        finish()
+                    }else{
+                        progressDialog.dismiss()
+                        Toast.makeText(this, "Email anda belum terverifikasi", Toast.LENGTH_SHORT).show()
+                    }
+
                 } else {
                     progressDialog.dismiss()
                     Toast.makeText(this, R.string.akun_tidak_terdaftar, Toast.LENGTH_SHORT).show()
@@ -84,7 +91,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
-        if(currentUser != null){
+        if(currentUser != null && currentUser.isEmailVerified){
             reload()
         }
     }

@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/target"
-        android:title="@string/target_menu"
+        android:title="@string/pencapaian"
         app:showAsAction="never"/>
 
     <item
@@ -24,24 +24,16 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/filter_transaksi"
+        android:id="@+id/refresh"
+        android:title="@string/filter"
+        android:icon="@drawable/baseline_refresh_24"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
+
+    <item
+        android:id="@+id/filter"
         android:title="@string/filter"
         android:icon="@drawable/ic_baseline_filter_alt_24"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction">
-        <menu>
-            <item
-                android:id="@+id/semua"
-                android:title="@string/semua"
-                app:showAsAction="never"/>
-            <item
-                android:id="@+id/pemasukan"
-                android:title="@string/pemasukan"
-                app:showAsAction="never"/>
-            <item
-                android:id="@+id/pengeluaran"
-                android:title="@string/pengeluaran"
-                app:showAsAction="never"/>
-        </menu>
-    </item>
+        tools:ignore="AlwaysShowAction"/>
 </menu>

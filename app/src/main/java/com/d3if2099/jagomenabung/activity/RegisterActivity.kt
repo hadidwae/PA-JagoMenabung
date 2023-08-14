@@ -1,6 +1,7 @@
 package com.d3if2099.jagomenabung.activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
+import android.widget.Button
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import com.d3if2099.jagomenabung.R
@@ -108,21 +110,33 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun daftarUser(nama: String, email: String, password: String) {
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Mohon tunggu")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    saveUser(nama, email, password)
+                    auth.currentUser?.sendEmailVerification()
+                        ?.addOnCompleteListener { verificationTask ->
+                            if (verificationTask.isSuccessful) {
+                                progressDialog.dismiss()
+                                showVerifikasiDialog()
+                                saveUser(nama, email, password)
+                            } else {
+                                progressDialog.dismiss()
+                                val message = task.exception!!.toString()
+                                Toast.makeText(this,"Error : $message", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                 } else {
+                    progressDialog.dismiss()
                     Toast.makeText(this, R.string.register_gagal, Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
     private fun saveUser(nama: String, email: String, password: String){
-        val progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Mohon tunggu")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
         val currentUserId = auth.currentUser!!.uid
         ref = FirebaseDatabase.getInstance().reference.child("Pengguna")
         val userr = Firebase.auth.currentUser
@@ -141,15 +155,28 @@ class RegisterActivity : AppCompatActivity() {
         val user = User(nama, email, password)
         ref.child(currentUserId).setValue(user).addOnCompleteListener(this) {
             if (it.isSuccessful){
-                progressDialog.dismiss()
-                Toast.makeText(this, R.string.register_berhasil, Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
+                Log.d("Simpan", "Berhasil")
             }else{
-                progressDialog.dismiss()
-                val message = it.exception!!.toString()
-                Toast.makeText(this,"Error : $message", Toast.LENGTH_SHORT).show()
+                Log.d("Simpan", "Gagal")
             }
         }
+    }
+
+    private fun showVerifikasiDialog() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_verifikasi, null)
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.setCancelable(false)
+
+        val alertDialog = dialogBuilder.create()
+        val btnOk = dialogView.findViewById<Button>(R.id.btn_ok)
+
+        btnOk.setOnClickListener {
+            alertDialog.dismiss()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        alertDialog.show()
     }
 }

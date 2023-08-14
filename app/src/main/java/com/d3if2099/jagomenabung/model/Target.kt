@@ -5,5 +5,8 @@ data class Target(
     val judul: String? = null,
     val tanggalMulai: Long? = null,
     val tanggalBerakhir: Long? = null,
-    val jumlahSaldo: Int? = null
+    val jumlahSaldo: Int? = null,
+    val saldoTerkumpul: Int? = null,
+    val aktif: Boolean? = null,
+    val kunci: Boolean? = null
 )

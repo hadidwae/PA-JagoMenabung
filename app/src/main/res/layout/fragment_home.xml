@@ -119,11 +119,11 @@
 
 
             <TextView
-                android:id="@+id/tv_tanggal"
+                android:id="@+id/tv_bulan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:text="@string/tanggal"
+                android:text="@string/bulan"
                 android:layout_weight="1"
                 android:textColor="@color/white"
                 android:gravity="center"

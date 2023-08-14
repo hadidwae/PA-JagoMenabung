@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <item
         android:id="@+id/menu_edit"
-        android:title="Edit"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:title="@string/edit"
+        android:icon="@drawable/baseline_edit_24"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
 
     <item
         android:id="@+id/menu_delete"
-        android:title="Delete"
-        android:orderInCategory="101"
-        app:showAsAction="never" />
+        android:title="@string/delete"
+        android:icon="@drawable/ic_baseline_delete_24"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
 </menu>

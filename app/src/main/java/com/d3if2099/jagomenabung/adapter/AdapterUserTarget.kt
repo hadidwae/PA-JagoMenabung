@@ -1,16 +1,22 @@
 package com.d3if2099.jagomenabung.adapter
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
+import android.app.AlertDialog
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.d3if2099.jagomenabung.R
+import com.d3if2099.jagomenabung.model.KunciCapaian
 import com.d3if2099.jagomenabung.model.Target
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -23,8 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
-class AdapterUserTarget(private val targetList: ArrayList<Target>, private var optionsMenuClickListener: OptionsMenuClickListener): RecyclerView.Adapter<AdapterUserTarget.MyViewHolder>() {
+class AdapterUserTarget(private val targetList: ArrayList<Target>,private val listener: onItemClicklistener): RecyclerView.Adapter<AdapterUserTarget.MyViewHolder>() {
     private val firebaseUser: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -32,10 +37,11 @@ class AdapterUserTarget(private val targetList: ArrayList<Target>, private var o
         return MyViewHolder(itemView)
     }
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item: Target = targetList[position]
         holder.judul.text = item.judul
+        val id = item.id.toString()
         val mulai = item.tanggalMulai!! / 1000
         val akhir = item.tanggalBerakhir!! / 1000
         val tanggalMulai = timestampToDate(mulai)
@@ -44,58 +50,60 @@ class AdapterUserTarget(private val targetList: ArrayList<Target>, private var o
         holder.tanggalAkhir.text = tanggalBerakhir
         val saldo = item.jumlahSaldo
         val formatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
-        val saldoformatterTarget = formatter.format(saldo.toString().toDouble())
+        val saldoformatterTarget = formatter.format(saldo.toString().toDouble()).replace(",00", "")
         holder.saldoTarget.text = saldoformatterTarget.toString()
 
+        val saldoTerkumpul = item.saldoTerkumpul
+        val saldoformatterTerkumpul = formatter.format(saldoTerkumpul.toString().toDouble()).replace(",00", "")
 
-        val tm = item.tanggalMulai
-        val ta = item.tanggalBerakhir
-        val database = FirebaseDatabase.getInstance()
-        val totalSaldoReference = database.reference.child("TotalSaldo").child(firebaseUser.uid)
+        val capaianRef = FirebaseDatabase.getInstance().reference.child("Capaian").child(firebaseUser.uid).child(id)
 
-        totalSaldoReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(totalSaldoSnapshot: DataSnapshot) {
-                if (totalSaldoSnapshot.exists()) {
-                    // Mengakses data di dalam snapshot dan menghitung total saldo berdasarkan rentang tanggal
-                    var totalSaldo = 0
-                    for (childSnapshot in totalSaldoSnapshot.children) {
-                        val timestamp = childSnapshot.key?.toLongOrNull()
-                        if (timestamp != null && timestamp >= tm && timestamp <= ta) {
-                            val saldoData = childSnapshot.child("saldo").getValue(Int::class.java)
-                            saldoData?.let {
-                                totalSaldo += it
-                                val saldoformatterTerkumpul = formatter.format(totalSaldo.toString().toDouble())
-
-                                if(totalSaldo < saldo!!){
-                                    holder.tvProgress.setText(R.string.capaian_belum)
-                                    holder.tvProgress.setTextColor(Color.RED)
-                                    holder.saldoTerkumpul.text = saldoformatterTerkumpul.toString()
-                                }else {
-                                    holder.tvProgress.setText(R.string.capaian)
-                                    holder.tvProgress.setTextColor(Color.parseColor("#03A309"))
-                                    holder.saldoTerkumpul.text = saldoformatterTarget.toString()
-                                }
-                                holder.progressBar.max = saldo
-                                holder.progressBar.progress = totalSaldo
-                            }
+        capaianRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val aktif = snapshot.child("aktif").getValue(Boolean::class.java) ?: false
+                val kunci = snapshot.child("kunci").getValue(Boolean::class.java) ?: false
+                if (aktif){
+                    if(saldoTerkumpul!! == saldo!!){
+                        if (kunci){
+                            holder.tvProgress.setText(R.string.capaian)
+                            holder.tvProgress.setTextColor(Color.parseColor("#03A309"))
+                            holder.saldoTerkumpul.text = saldoformatterTerkumpul
+                            holder.tvProgress.visibility = View.VISIBLE
+                            holder.imgKunci.visibility = View.VISIBLE
+                            holder.tvKet.visibility = View.GONE
+                        } else {
+                            holder.tvProgress.setText(R.string.capaian)
+                            holder.tvProgress.setTextColor(Color.parseColor("#03A309"))
+                            holder.saldoTerkumpul.text = saldoformatterTerkumpul
+                            holder.tvProgress.visibility = View.VISIBLE
+                            holder.imgKunci.visibility = View.GONE
+                            holder.tvKet.visibility = View.GONE
                         }
+                    } else {
+                        holder.saldoTerkumpul.text = saldoformatterTerkumpul
+                        holder.tvProgress.visibility = View.GONE
+                        holder.tvKet.visibility = View.GONE
                     }
-                } else {
-                    holder.saldoTerkumpul.text = "Rp0,00"
-                    holder.tvProgress.setText(R.string.capaian_belum)
+                }else {
+                    holder.tvProgress.text = "Tidak Tercapai"
                     holder.tvProgress.setTextColor(Color.RED)
-                    println("Data tidak ditemukan di TotalSaldo.")
+                    holder.saldoTerkumpul.text = saldoformatterTerkumpul
+                    holder.tvProgress.visibility = View.VISIBLE
+                    holder.tvKet.visibility = View.VISIBLE
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
-                println("Gagal mendapatkan data dari TotalSaldo: ${error.message}")
             }
         })
 
-        holder.menu.setOnClickListener {
-            optionsMenuClickListener.onOptionsMenuClicked(position)
-        }
+        holder.progressBar.max = saldo!!
+        holder.progressBar.progress = saldoTerkumpul!!
+
+        val persentaseProgres = (saldoTerkumpul.toDouble() / saldo) * 100
+        holder.tvPersen.text = "Capaian : %.0f%%".format(persentaseProgres)
+
+        holder.show.setOnClickListener { listener.onItemClick(item, it)}
+
     }
 
     override fun getItemCount(): Int {
@@ -108,9 +116,12 @@ class AdapterUserTarget(private val targetList: ArrayList<Target>, private var o
         val tanggalAkhir: TextView = itemView.findViewById(R.id.tv_tanggalAkhir)
         val saldoTerkumpul: TextView = itemView.findViewById(R.id.tv_saldoTerkumpul)
         val saldoTarget: TextView = itemView.findViewById(R.id.tv_saldoTarget)
-        val menu: ImageButton = itemView.findViewById(R.id.menuBtn)
         val tvProgress: TextView = itemView.findViewById(R.id.tv_progres)
+        val tvKet: LinearLayout = itemView.findViewById(R.id.tvKeteranganGagal)
         val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
+        val tvPersen: TextView = itemView.findViewById(R.id.capaian_persen)
+        val show : CardView = itemView.findViewById(R.id.listTarget)
+        val imgKunci : ImageView = itemView.findViewById(R.id.btnImgKunci)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -120,8 +131,8 @@ class AdapterUserTarget(private val targetList: ArrayList<Target>, private var o
         notifyDataSetChanged()
     }
 
-    interface OptionsMenuClickListener {
-        fun onOptionsMenuClicked(position: Int)
+    interface onItemClicklistener {
+        fun onItemClick(target : Target, v : View)
     }
 
     @SuppressLint("SimpleDateFormat")

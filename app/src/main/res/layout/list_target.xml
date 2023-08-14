@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/listTransaksi"
+    android:id="@+id/listTarget"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -33,15 +33,13 @@
                 tools:ignore="NestedWeights"
                 android:layout_centerHorizontal="true"/>
 
-            <ImageButton
-                android:id="@+id/menuBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/baseline_more_vert_24"
-                android:backgroundTint="@color/endColor"
-                android:contentDescription="@string/button_menu"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"/>
+            <ImageView
+                android:id="@+id/btnImgKunci"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:visibility="gone"
+                android:background="@drawable/baseline_lock"
+                android:layout_alignParentEnd="true"/>
         </RelativeLayout>
 
         <View
@@ -136,7 +134,7 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/gilroymedium"
                 android:textColor="@color/pemasukan"
-                android:text="Rp50.000,00"
+                android:text="@string/rp50_000_00"
                 android:textSize="15sp" />
 
             <TextView
@@ -144,9 +142,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
                 android:fontFamily="@font/gilroymedium"
                 android:textColor="@color/endColor"
-                android:text=" terkumpul dari "
+                android:text="@string/terkumpul_dari"
                 android:textSize="15sp" />
 
             <TextView
@@ -154,16 +153,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
                 android:fontFamily="@font/gilroymedium"
                 android:textColor="@color/endColor"
-                android:text="Rp100.000,00"
+                android:text="@string/rp100_000_00"
                 android:textSize="15sp" />
         </LinearLayout>
         
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="10dp">
             
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -172,6 +172,12 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:scaleY="2"/>
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/capaian_persen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/capaian_90"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -186,8 +192,33 @@
                 android:text="@string/capaian"
                 android:textColor="@color/pemasukan"
                 android:textSize="15sp"
+                android:visibility="visible"
                 tools:ignore="NestedWeights"
                 android:layout_centerHorizontal="true"/>
+
         </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/tvKeteranganGagal"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroysemibold"
+                android:text="@string/ket"
+                android:textSize="15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroysemibold"
+                android:text="@string/ket_pembalikan_saldo"
+                android:textSize="15sp"
+                android:layout_marginStart="5dp"/>
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

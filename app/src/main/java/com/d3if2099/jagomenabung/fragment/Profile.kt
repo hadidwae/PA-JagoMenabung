@@ -193,6 +193,13 @@ class Profile : Fragment() {
                         Log.i("Update", "Gagal")
                     }
                 } else {
+                    binding.saveCancel.visibility = View.GONE
+                    binding.editProfile.visibility = View.GONE
+                    binding.tiNama.isFocusable = false
+                    binding.tiNama.isFocusableInTouchMode = false
+                    binding.tiNama.isClickable = false
+                    binding.tiNama.requestFocus()
+                    binding.btnEdit.visibility = View.VISIBLE
                     Toast.makeText(activity, "Gagal mengupdate profile.", Toast.LENGTH_SHORT).show()
                 }
             }

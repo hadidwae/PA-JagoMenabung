@@ -18,10 +18,10 @@ import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AdapterUserTransaksi(private val transaksiList: ArrayList<Transaksi>, private val listener: onItemClicklistener): RecyclerView.Adapter<AdapterUserTransaksi.MyViewHolder>() {
+class AdapterUserTransaksi(private val transaksiList: List<Transaksi>, private val listener: onItemClicklistener): RecyclerView.Adapter<AdapterUserTransaksi.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_transaksi, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_transaksi, parent, false)
         return MyViewHolder(itemView)
     }
 
@@ -32,8 +32,8 @@ class AdapterUserTransaksi(private val transaksiList: ArrayList<Transaksi>, priv
         holder.keterangan.text = transaksi.keterangan
         val saldo = transaksi.jumlahSaldo
         val formatter = NumberFormat.getCurrencyInstance(Locale("in","ID"))
-        val saldoformatter = formatter.format(saldo.toString().toDouble())
-        holder.saldo.text = saldoformatter.toString()
+        val saldoformatter = formatter.format(saldo.toString().toDouble()).replace(",00", "")
+        holder.saldo.text = saldoformatter
         if (transaksi.kategori == "Pengeluaran"){
             holder.icBackground.setBackgroundResource(R.drawable.rp_pengeluaran)
             holder.saldo.setTextColor(Color.RED)
@@ -56,12 +56,6 @@ class AdapterUserTransaksi(private val transaksiList: ArrayList<Transaksi>, priv
         val show : CardView = itemView.findViewById(R.id.listTransaksi)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(data: List<Transaksi>) {
-        transaksiList.clear()
-        transaksiList.addAll(data)
-        notifyDataSetChanged()
-    }
 
     interface onItemClicklistener{
         fun onItemClick(transaksi : Transaksi, v : View)

@@ -4,8 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/endColor"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_transaksi"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +45,7 @@
                 android:id="@+id/dialogJudulTIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/masukan_judul_transaksi"
                 android:fontFamily="@font/gilroymedium"
                 android:inputType="textCapSentences"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -47,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Mulai"
+            android:text="Tanggal"
             android:textSize="15sp"
             android:layout_weight="2"
             android:fontFamily="@font/gilroymedium"/>
@@ -59,9 +74,10 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_weight="1">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dialogTanggalMulaiTIL"
+                android:id="@+id/dialogTanggalTIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/pilih_tanggal"
                 android:clickable="false"
                 android:inputType="none"
                 android:cursorVisible="false"
@@ -81,59 +97,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Akhir"
-            android:layout_weight="2"
+            android:text="@string/kategori"
             android:textSize="15sp"
+            android:layout_weight="2"
             android:fontFamily="@font/gilroymedium"/>
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_weight="1">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dialogTanggalAkhirTIL"
+
+            <AutoCompleteTextView
+                android:id="@+id/dialogKategoriSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="false"
                 android:inputType="none"
-                android:cursorVisible="false"
+                android:text="@string/semua"
                 android:fontFamily="@font/gilroymedium"
-                android:focusable="false"
-                android:focusableInTouchMode="false"/>
+                tools:ignore="LabelFor" />
+
         </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btnFilter"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="5dp"
-        android:gravity="center">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/target_rp"
-            android:layout_weight="2"
-            android:textSize="15sp"
-            android:fontFamily="@font/gilroymedium"/>
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:padding="10dp"
+        android:text="Filter"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/gilroysemibold"/>
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="16dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dialogJumlahTIL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:fontFamily="@font/gilroymedium"/>
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
 </LinearLayout>

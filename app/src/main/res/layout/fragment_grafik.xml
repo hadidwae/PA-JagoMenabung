@@ -41,11 +41,11 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/tv_tanggal"
+                android:id="@+id/tv_bulan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:text="@string/tanggal"
+                android:text="@string/bulan"
                 android:layout_weight="1"
                 android:textColor="@color/white"
                 android:gravity="center"
@@ -78,17 +78,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp" />
 
-    <TextView
-        android:id="@+id/tv_visible"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textAlignment="center"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="250dp"
-        android:text="@string/tidak_ada_transaksi"
-        android:visibility="gone"/>
-
     <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/pieChart"
@@ -122,6 +113,39 @@
             android:textColor="@color/black"
             app:drawableLeftCompat="@drawable/ic_circle"
             app:drawableTint="@color/pengeluaran" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_SaldoPemasukan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/_0"
+            android:textAlignment="center"
+            android:textColor="@color/pemasukan" />
+
+        <TextView
+            android:id="@+id/tv_SaldoPengeluaran"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/_0"
+            android:textAlignment="center"
+            android:textColor="@color/pengeluaran" />
     </LinearLayout>
 
 </RelativeLayout>

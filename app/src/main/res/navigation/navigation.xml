@@ -49,6 +49,15 @@
     <fragment
         android:id="@+id/targetFragment"
         android:name="com.d3if2099.jagomenabung.fragment.TargetFragment"
-        android:label="Target"
-        tools:layout="@layout/fragment_target" />
+        android:label="Pencapaian"
+        tools:layout="@layout/fragment_target" >
+        <action
+            android:id="@+id/action_targetFragment_to_detailCapaianFragment"
+            app:destination="@id/detailCapaianFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailCapaianFragment"
+        android:name="com.d3if2099.jagomenabung.fragment.DetailCapaianFragment"
+        android:label="Detail Capaian"
+        tools:layout="@layout/fragment_detail_capaian"/>
 </navigation>

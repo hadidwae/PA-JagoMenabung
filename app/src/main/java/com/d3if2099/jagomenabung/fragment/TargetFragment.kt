@@ -8,20 +8,19 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.core.view.get
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.d3if2099.jagomenabung.R
 import com.d3if2099.jagomenabung.adapter.AdapterUserTarget
 import com.d3if2099.jagomenabung.databinding.FragmentTargetBinding
 import com.d3if2099.jagomenabung.model.Target
-import com.d3if2099.jagomenabung.model.TotalSaldo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -30,7 +29,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.NumberFormat
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -50,7 +48,7 @@ class TargetFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTargetBinding.inflate(layoutInflater, container, false)
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
@@ -60,9 +58,14 @@ class TargetFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
 
-        adapter = AdapterUserTarget(arrayListOf() , object : AdapterUserTarget.OptionsMenuClickListener {
-            override fun onOptionsMenuClicked(position: Int) {
-                performOptionsMenuClick(position)
+        adapter = AdapterUserTarget(arrayListOf(), object : AdapterUserTarget.onItemClicklistener {
+            override fun onItemClick(target: Target, v: View) {
+                val id = target.id
+                setFragmentResult(
+                    "id",
+                    bundleOf("id" to id)
+                )
+                findNavController().navigate(R.id.action_targetFragment_to_detailCapaianFragment)
             }
         })
         recyclerView.adapter = adapter
@@ -81,7 +84,7 @@ class TargetFragment : Fragment() {
     }
 
     private fun showList() {
-        ref = FirebaseDatabase.getInstance().reference.child("Target").child(firebaseUser.uid)
+        ref = FirebaseDatabase.getInstance().reference.child("Capaian").child(firebaseUser.uid)
         ref.addValueEventListener(object : ValueEventListener {
             @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -105,52 +108,7 @@ class TargetFragment : Fragment() {
         })
     }
 
-    private fun performOptionsMenuClick(position: Int) {
-        val popupMenu = PopupMenu(context , binding.recyclerViewTarget[position].findViewById(R.id.menuBtn))
-        popupMenu.inflate(R.menu.menu_target)
-        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener{
-            override fun onMenuItemClick(item: MenuItem?): Boolean {
-                when(item?.itemId){
-                    R.id.menu_delete -> {
-                        val target = targetArrayList[position]
-                        val id = target.id!!
-                        ref = FirebaseDatabase.getInstance().reference.child("Target").child(firebaseUser.uid).child(id)
-                        ref.addValueEventListener(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                if (snapshot.exists()) {
-                                    snapshot.ref.removeValue()
-                                    Toast.makeText(
-                                        context,
-                                        "Berhasil menghapus target",
-                                        Toast.LENGTH_SHORT).show()
-                                    adapter.setData(targetArrayList)
-                                } else {
-                                    adapter.setData(targetArrayList)
-                                }
-
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-
-                            }
-
-                        })
-
-                        return true
-                    }
-                    // in the same way you can implement others
-                    R.id.menu_edit -> {
-                        // define
-                        Toast.makeText(context , "Edit diklik" , Toast.LENGTH_SHORT).show()
-                        return true
-                    }
-                }
-                return false
-            }
-        })
-        popupMenu.show()
-    }
-
+    @SuppressLint("SimpleDateFormat")
     private fun showTambahTargetDialog() {
         val dialogBuilder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
@@ -165,24 +123,9 @@ class TargetFragment : Fragment() {
         val calendar = Calendar.getInstance()
         val tanggalMulaiCalendar = calendar.timeInMillis
 
-        judul.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                if (charSequence.isNotEmpty()) {
-                    val capitalizedText = charSequence.toString().substring(0, 1).toUpperCase() +
-                            charSequence.toString().substring(1)
-                    judul.removeTextChangedListener(this)
-                    judul.setText(capitalizedText)
-                    judul.setSelection(capitalizedText.length)
-                    judul.addTextChangedListener(this)
-                }
-            }
-            override fun afterTextChanged(editable: Editable) {}
-        })
-
-        tanggalMulai.setOnClickListener {
-            showDatePicker(tanggalMulai)
-        }
+        val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy")
+        val currentDateAndTime: String = simpleDateFormat.format(Date())
+        tanggalMulai.setText(currentDateAndTime)
 
         tanggalAkhir.setOnClickListener {
             showDatePicker(tanggalAkhir, tanggalMulaiCalendar)
@@ -239,7 +182,7 @@ class TargetFragment : Fragment() {
             }
         })
 
-        dialogBuilder.setTitle("Tambah Data")
+        dialogBuilder.setTitle("Tambah Capaian")
         dialogBuilder.setPositiveButton("Tambah") { dialog, _ ->
             val getId = ref.push().key!!
             val getJudul = judul.text.toString()
@@ -265,8 +208,8 @@ class TargetFragment : Fragment() {
     }
 
     private fun simpanTarget(getId: String, getJudul : String, getTanggalMulai: Long, getTanggalAkhir: Long, getSaldo: Int) {
-        val target = Target(getId, getJudul, getTanggalMulai, getTanggalAkhir, getSaldo)
-        ref = FirebaseDatabase.getInstance().reference.child("Target")
+        val target = Target(getId, getJudul, getTanggalMulai, getTanggalAkhir, getSaldo, 0, true, kunci = false)
+        ref = FirebaseDatabase.getInstance().reference.child("Capaian")
         ref.child(firebaseUser.uid).child(getId).setValue(target).addOnCompleteListener {
             if (it.isSuccessful){
                 Toast.makeText(context, R.string.tambah_target, Toast.LENGTH_SHORT).show()
@@ -282,7 +225,6 @@ class TargetFragment : Fragment() {
     private fun showDatePicker(editText: EditText, minDate: Long? = null) {
         val calendar = Calendar.getInstance()
 
-        val selectedDate = getSelectedDateFromString(editText.text.toString())
 
         val datePickerDialog = DatePickerDialog(
             requireContext(),
@@ -302,8 +244,8 @@ class TargetFragment : Fragment() {
             },
             // Set the selectedDateMulai as the default date for the first date picker
             selectedDateMulai?.let { it.year + 1900 } ?: calendar.get(Calendar.YEAR),
-            selectedDateMulai?.let { it.month } ?: calendar.get(Calendar.MONTH),
-            selectedDateMulai?.let { it.date } ?: calendar.get(Calendar.DAY_OF_MONTH)
+            selectedDateMulai?.month ?: calendar.get(Calendar.MONTH),
+            selectedDateMulai?.date ?: calendar.get(Calendar.DAY_OF_MONTH)
         )
 
         if (minDate != null && editText.id == R.id.dialogTanggalAkhirTIL) {
@@ -313,19 +255,9 @@ class TargetFragment : Fragment() {
         datePickerDialog.show()
     }
 
-    private fun getSelectedDateFromString(dateString: String): Date? {
-        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-        return try {
-            dateFormat.parse(dateString)
-        } catch (e: ParseException) {
-            null
-        }
-    }
-
     private fun convertStringToTimestamp(dateString: String): Long {
         val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
         val date = dateFormat.parse(dateString)
         return date?.time ?: 0
     }
-
 }

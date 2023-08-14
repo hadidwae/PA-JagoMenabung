@@ -80,7 +80,7 @@ class FragmentTambahTransaksi : Fragment(), DateSelected {
             } else if(salwal.isNotEmpty()) {
                 val jumlahSaldoStr = salwal.replace(".", "")
                 val jumlahSaldo = jumlahSaldoStr.toInt()
-                val tanggal = convertStringToDate(tanggalS).toString()
+                val tanggal = convertStringToTimestamp(tanggalS)
                 tambahTransaksi(idTransaksi, kategori, tanggal, judul, jumlahSaldo, keterangan)
             }
         }
@@ -141,7 +141,7 @@ class FragmentTambahTransaksi : Fragment(), DateSelected {
 
     @SuppressLint("SimpleDateFormat")
     private fun currentDate(){
-        val simpleDateFormat = SimpleDateFormat("EEEE, dd MMM yyy")
+        val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
         binding.tanggalTIL.setText(currentDateAndTime)
@@ -159,7 +159,12 @@ class FragmentTambahTransaksi : Fragment(), DateSelected {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            return  DatePickerDialog(requireContext(), this, year, month, day )
+            val datePickerDialog = DatePickerDialog(requireContext(), this, year, month, day)
+
+            val maxDate = System.currentTimeMillis()
+            datePickerDialog.datePicker.maxDate = maxDate
+
+            return datePickerDialog
         }
 
         override fun onDateSet(view: DatePicker?, year: Int, month : Int, day : Int) {
@@ -170,7 +175,7 @@ class FragmentTambahTransaksi : Fragment(), DateSelected {
     private fun tambahTransaksi(
         idTransaksi: String,
         kategori: String,
-        tanggal: String,
+        tanggal: Long,
         judul: String,
         jumlahSaldo: Int,
         keterangan: String,
@@ -196,7 +201,7 @@ class FragmentTambahTransaksi : Fragment(), DateSelected {
         calendar.set(Calendar.MONTH,month)
         calendar.set(Calendar.YEAR,year)
 
-        val viewFormatter = SimpleDateFormat("EEEE, dd MMM yyy")
+        val viewFormatter = SimpleDateFormat("dd MMMM yyyy")
         val viewFormattedDate : String = viewFormatter.format(calendar.time)
 
         binding.tanggalTIL.setText(viewFormattedDate)
@@ -206,6 +211,12 @@ class FragmentTambahTransaksi : Fragment(), DateSelected {
     fun convertStringToDate(inputDate: String): LocalDate {
         val formatter = DateTimeFormatter.ofPattern("EEEE, dd MMM yyy")
         return LocalDate.parse(inputDate, formatter)
+    }
+
+    private fun convertStringToTimestamp(dateString: String): Long {
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        val date = dateFormat.parse(dateString)
+        return date?.time ?: 0
     }
 
     override fun onResume() {

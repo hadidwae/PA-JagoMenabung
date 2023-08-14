@@ -25,8 +25,6 @@ import com.d3if2099.jagomenabung.databinding.FragmentShowTransaksiBinding
 import com.d3if2099.jagomenabung.model.Transaksi
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ShowTransaksiFragment : Fragment(), DateSelected {
@@ -118,8 +116,8 @@ class ShowTransaksiFragment : Fragment(), DateSelected {
                 if (kategori.isEmpty() && tanggalS.isEmpty() && judul.isEmpty() && salwal.isEmpty()) {
                     Toast.makeText(context, "Gagal, pastikan data terisi dengan benar", Toast.LENGTH_SHORT).show()
                 } else {
-                    val tanggal = convertStringToDate(tanggalS)
-                    editTransaksi(result, kategori, tanggal.toString(), judul, jumlahSaldo, keterangan)
+                    val tanggal = convertStringToTimestamp(tanggalS)
+                    editTransaksi(result, kategori, tanggal, judul, jumlahSaldo, keterangan)
                 }
             }
         }
@@ -132,9 +130,11 @@ class ShowTransaksiFragment : Fragment(), DateSelected {
             binding.kategoriSpinner.setText(result)
         }
         setFragmentResultListener("tanggal") { _, bundle ->
-            val result = bundle.getString("tanggal")
-            binding.tanggalTIL.setText(result)
-            binding.tanggalItem.text = result
+            val result = bundle.getString("tanggal").toString()
+            val tm = result.toLong()
+            val tanggalS = tm / 1000
+            val tanggal = timestampToDate(tanggalS)
+            binding.tanggalTIL.setText(tanggal)
         }
         setFragmentResultListener("judul") { _, bundle ->
             val result = bundle.getString("judul")
@@ -177,21 +177,20 @@ class ShowTransaksiFragment : Fragment(), DateSelected {
         calendar.set(Calendar.MONTH,month)
         calendar.set(Calendar.YEAR,year)
 
-        val viewFormatter = SimpleDateFormat("EEEE, dd MMM yyy")
+        val viewFormatter = SimpleDateFormat("dd MMMM yyyy")
         val viewFormattedDate : String = viewFormatter.format(calendar.time)
 
         binding.tanggalTIL.setText(viewFormattedDate)
     }
 
-    private fun editTransaksi(result: String?, kategori: String, tanggal: String, judul: String, jumlahSaldo: Int, keterangan: String) {
+    private fun editTransaksi(result: String?, kategori: String, tanggal: Long, judul: String, jumlahSaldo: Int, keterangan: String) {
         val currentUserId = auth.currentUser!!.uid
         val idTransaksi = ref.push().key!!
         val trans = Transaksi(idTransaksi, kategori, tanggal, judul, jumlahSaldo, keterangan)
 
-        ref.child(currentUserId).child(tanggal).child(idTransaksi).setValue(trans).addOnCompleteListener {
+        ref.child(currentUserId).child(idTransaksi).setValue(trans).addOnCompleteListener {
             if (it.isSuccessful){
-                val tanggalold = binding.tanggalItem.text.toString()
-                FirebaseDatabase.getInstance().reference.child("Transaksi").child(currentUserId).child(tanggalold).child(result!!).removeValue()
+                FirebaseDatabase.getInstance().reference.child("Transaksi").child(currentUserId).child(result!!).removeValue()
                 Toast.makeText(context, "Edit transaksi berhasil", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             }else{
@@ -226,11 +225,17 @@ class ShowTransaksiFragment : Fragment(), DateSelected {
         }
     }
 
+    private fun convertStringToTimestamp(dateString: String): Long {
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        val date = dateFormat.parse(dateString)
+        return date?.time ?: 0
+    }
 
-    @SuppressLint("NewApi")
-    fun convertStringToDate(inputDate: String): LocalDate {
-        val formatter = DateTimeFormatter.ofPattern("EEEE, dd MMM yyy")
-        return LocalDate.parse(inputDate, formatter)
+    @SuppressLint("SimpleDateFormat")
+    private fun timestampToDate(timestamp: Long): String {
+        val date = Date(timestamp * 1000L)
+        val sdf = SimpleDateFormat("dd MMMM yyyy")
+        return sdf.format(date)
     }
 
     override fun onResume() {
